@@ -5,15 +5,18 @@ from pathlib import Path
 import kagglehub
 from dotenv import load_dotenv
 
-COMPETITION = "rossmann-store-sales"
-FILES = ("train.csv", "store.csv")
+COMPETITION = 'rossmann-store-sales'
+FILES = ('train.csv', 'store.csv')
 RAW_DIR = Path(__file__).resolve().parent
 
 
 def download(name: str) -> Path:
     downloaded = Path(
         kagglehub.competition_download(
-            COMPETITION, path=name, output_dir=str(RAW_DIR), force_download=True
+            COMPETITION,
+            path=name,
+            output_dir=str(RAW_DIR),
+            force_download=True,
         )
     )
     if zipfile.is_zipfile(downloaded):
@@ -24,7 +27,7 @@ def download(name: str) -> Path:
 
 
 def cleanup() -> None:
-    keep = {*FILES, Path(__file__).name, ".gitkeep"}
+    keep = {*FILES, Path(__file__).name, '.gitkeep'}
     for item in RAW_DIR.iterdir():
         if item.name in keep:
             continue
@@ -34,7 +37,7 @@ def cleanup() -> None:
             item.unlink()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     load_dotenv()
     try:
         for name in FILES:
