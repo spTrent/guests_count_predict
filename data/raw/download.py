@@ -6,7 +6,7 @@ import kagglehub
 from dotenv import load_dotenv
 
 COMPETITION = "rossmann-store-sales"
-FILES = ("train.csv", "test.csv")
+FILES = ("train.csv", "store.csv")
 RAW_DIR = Path(__file__).resolve().parent
 
 
