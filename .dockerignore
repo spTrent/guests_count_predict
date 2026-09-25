@@ -1,0 +1,13 @@
+.env
+.git
+.idea
+.venv
+.mypy_cache
+.ruff_cache
+.pytest_cache
+**/__pycache__
+data/raw
+notebooks
+reports
+tests
+output

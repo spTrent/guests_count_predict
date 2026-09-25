@@ -760,18 +760,17 @@ name = "guests-count-predict"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "kagglehub" },
-    { name = "matplotlib" },
+    { name = "joblib" },
+    { name = "numpy" },
     { name = "pandas" },
-    { name = "prophet" },
-    { name = "python-dotenv" },
-    { name = "pywavelets" },
     { name = "scikit-learn" },
-    { name = "seaborn" },
-    { name = "statsmodels" },
 ]
 
 [package.dev-dependencies]
+data = [
+    { name = "kagglehub" },
+    { name = "python-dotenv" },
+]
 dev = [
     { name = "jupyter" },
     { name = "mypy" },
@@ -779,27 +778,40 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
+research = [
+    { name = "matplotlib" },
+    { name = "prophet" },
+    { name = "pywavelets" },
+    { name = "seaborn" },
+    { name = "statsmodels" },
+]
 
 [package.metadata]
 requires-dist = [
-    { name = "kagglehub", specifier = ">=1.0.2" },
-    { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "joblib", specifier = ">=1.6.0" },
+    { name = "numpy", specifier = ">=2.5.3" },
     { name = "pandas", specifier = ">=3.0.6" },
-    { name = "prophet", specifier = ">=1.4.0" },
-    { name = "python-dotenv", specifier = ">=1.2.3" },
-    { name = "pywavelets", specifier = ">=1.10.0" },
     { name = "scikit-learn", specifier = ">=1.9.1" },
-    { name = "seaborn", specifier = ">=0.13.2" },
-    { name = "statsmodels", specifier = ">=0.15.0" },
 ]
 
 [package.metadata.requires-dev]
+data = [
+    { name = "kagglehub", specifier = ">=1.0.2" },
+    { name = "python-dotenv", specifier = ">=1.2.3" },
+]
 dev = [
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "mypy", specifier = ">=2.3.1" },
     { name = "pre-commit", specifier = ">=4.6.2" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "ruff", specifier = ">=0.16.8" },
+]
+research = [
+    { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "prophet", specifier = ">=1.4.0" },
+    { name = "pywavelets", specifier = ">=1.10.0" },
+    { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "statsmodels", specifier = ">=0.15.0" },
 ]
 
 [[package]]

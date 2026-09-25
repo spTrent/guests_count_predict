@@ -3,8 +3,10 @@ RAW_PLAN := data/raw/test.csv
 CALENDAR := data/processed/calendar.csv
 DATE ?= 2015-08-01
 STORE ?= 1
+IMAGE ?= guests-forecast
+MODEL := models/model.joblib
 
-.PHONY: install download calendar data train predict test lint clean
+.PHONY: install download calendar data train predict test lint requirements docker-build docker-run clean
 
 install:
 	uv sync
@@ -37,6 +39,18 @@ lint:
 	uv run ruff check .
 	uv run ruff format --check .
 	uv run mypy src predict.py
+
+requirements:
+	uv export --format requirements-txt --no-hashes --no-header --no-annotate --all-groups --no-emit-project -o requirements.txt
+
+$(MODEL): $(CALENDAR)
+	uv run python -m src.train
+
+docker-build: $(MODEL)
+	docker build -t $(IMAGE) .
+
+docker-run:
+	docker run --rm $(IMAGE) --date $(DATE) --store $(STORE)
 
 clean:
 	rm -f $(CALENDAR) data/processed/plan.csv

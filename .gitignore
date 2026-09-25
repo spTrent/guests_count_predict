@@ -12,6 +12,7 @@ data/processed/*
 !data/processed/.gitkeep
 
 models/
+output/
 
 .idea/
 
