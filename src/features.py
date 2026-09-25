@@ -147,3 +147,19 @@ def make_training_dataset(df: pd.DataFrame) -> dict[int, pd.DataFrame]:
         horizon: training_rows(frame)
         for horizon, frame in make_all_horizons(df).items()
     }
+
+
+def forecast_rows(frame: pd.DataFrame, origin: pd.Timestamp) -> pd.DataFrame:
+    rows = []
+    for horizon in HORIZONS:
+        features = make_features(frame, horizon)
+        rows.append(
+            features[features['date'] == origin].assign(horizon=horizon)
+        )
+    result = pd.concat(rows, ignore_index=True)
+    if result.empty or result[HISTORY_CHECK_FEATURE].isna().any():
+        raise ValueError(
+            f'Слишком короткая история до {origin.date()}: '
+            'нужно хотя бы 14 открытых дней за последние 28'
+        )
+    return result.drop(columns='y').astype(INTEGER_FEATURES)
