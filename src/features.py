@@ -124,5 +124,26 @@ def make_features(df: pd.DataFrame, horizon: int) -> pd.DataFrame:
     )
 
 
-def make_all_horizons(df: pd.DataFrame) -> dict[int, pd.DataFrame]:
-    return {horizon: make_features(df, horizon) for horizon in HORIZONS}
+HISTORY_CHECK_FEATURE = 'rolling_mean_28'
+INTEGER_FEATURES = {'target_dow': 'int64', 'target_month': 'int64'}
+
+
+def training_rows(df: pd.DataFrame) -> pd.DataFrame:
+    has_answer = df['y'].notna()
+    has_history = df[HISTORY_CHECK_FEATURE].notna()
+    return df[has_history & has_answer].astype(INTEGER_FEATURES)
+
+
+def split_x_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
+    return df[FEATURE_COLUMNS], df['y']
+
+
+def make_all_horizons(calendar: pd.DataFrame) -> dict[int, pd.DataFrame]:
+    return {horizon: make_features(calendar, horizon) for horizon in HORIZONS}
+
+
+def make_training_dataset(df: pd.DataFrame) -> dict[int, pd.DataFrame]:
+    return {
+        horizon: training_rows(frame)
+        for horizon, frame in make_all_horizons(df).items()
+    }
