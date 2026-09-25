@@ -11,7 +11,13 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import Pipeline
 
-from src.features import CATEGORICAL_FEATURES, FEATURE_COLUMNS, split_x_y
+from src.data import STATUS_CLOSE, build_forecast_frame
+from src.features import (
+    CATEGORICAL_FEATURES,
+    FEATURE_COLUMNS,
+    forecast_rows,
+    split_x_y,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_PATH = ROOT / 'models' / 'model.joblib'
@@ -132,3 +138,41 @@ def load_model(path: Path = MODEL_PATH) -> ForecastModel:
     if not isinstance(model, ForecastModel):
         raise TypeError(f'В файле {path} не модель прогноза')
     return model
+
+
+def forecast_week(
+    model: ForecastModel,
+    calendar: pd.DataFrame,
+    plan: pd.DataFrame,
+    store_id: int,
+    start: pd.Timestamp,
+) -> pd.DataFrame:
+    stores = model.metadata.get('stores', [])
+    if store_id not in stores:
+        raise ValueError(
+            f'Модель обучена только на магазинах {stores}, магазина {store_id} в ней нет'
+        )
+    origin = start - pd.Timedelta(days=1)
+    frame = build_forecast_frame(calendar, plan, store_id, origin)
+    rows = forecast_rows(frame, origin)
+    forecast = model.predict(rows)
+
+    days = frame.set_index('date')
+    status = rows['target_date'].map(days['status']).to_numpy()
+    closed = status == STATUS_CLOSE
+    forecast.loc[closed, ['forecast', 'lower', 'upper']] = 0.0
+
+    history = calendar[calendar['store_id'] == store_id].set_index('date')
+    actual = rows['target_date'].map(history['target'])
+    return pd.DataFrame(
+        {
+            'date': rows['target_date'],
+            'horizon': rows['horizon'],
+            'closed': closed,
+            'forecast': forecast['forecast'].round(),
+            'lower': forecast['lower'].round(),
+            'upper': forecast['upper'].round(),
+            'actual': actual,
+            'error': forecast['forecast'].round() - actual,
+        }
+    ).reset_index(drop=True)
