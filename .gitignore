@@ -11,6 +11,8 @@ data/raw/*.csv
 data/processed/*
 !data/processed/.gitkeep
 
+models/
+
 .idea/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm+all
