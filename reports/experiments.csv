@@ -1,0 +1,3 @@
+run_at,boosting_params,holdout_mae_baseline_week_ago,holdout_mae_baseline_two_weeks_ago,holdout_mae_prophet,holdout_mae_boosting,cv_mae_baseline_week_ago,cv_mae_baseline_two_weeks_ago,cv_mae_prophet,cv_mae_boosting,"holdout_coverage, %"
+2026-09-25T18:19:17,"{""learning_rate"": 0.05, ""max_iter"": 300, ""max_leaf_nodes"": 15, ""min_samples_leaf"": 20, ""l2_regularization"": 1.0}",77.9,48.7,43.5,35.6,80.8,64.6,48.0,45.5,68.7
+2026-09-25T18:21:03,"{""learning_rate"": 0.05, ""max_iter"": 300, ""max_leaf_nodes"": 15, ""min_samples_leaf"": 20, ""l2_regularization"": 1.0}",77.9,48.7,43.5,35.6,80.8,64.6,48.0,45.5,68.7

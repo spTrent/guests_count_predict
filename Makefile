@@ -2,7 +2,7 @@ RAW_DATA := data/raw/train.csv
 RAW_PLAN := data/raw/test.csv
 CALENDAR := data/processed/calendar.csv
 
-.PHONY: install download calendar data clean
+.PHONY: install download calendar data train clean
 
 install:
 	uv sync
@@ -21,6 +21,9 @@ $(CALENDAR): $(RAW_DATA) $(RAW_PLAN) src/data.py
 calendar: $(CALENDAR)
 
 data: install calendar
+
+train: $(CALENDAR)
+	uv run python -m src.train
 
 clean:
 	rm -f $(CALENDAR) data/processed/plan.csv

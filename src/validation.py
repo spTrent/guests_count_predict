@@ -52,7 +52,7 @@ def baseline_predictions(df: pd.DataFrame, horizon: int) -> pd.DataFrame:
 
 
 def metrics_table(
-    holdout: pd.DataFrame, predictions: pd.DataFrame, horizon: int
+    holdout: pd.DataFrame, predictions: pd.DataFrame, horizon: int | str
 ) -> pd.DataFrame:
     valid = predictions.notna().all(axis=1)
     frame = predictions[valid].assign(
@@ -76,3 +76,9 @@ def metrics_table(
         for name in predictions.columns
     ]
     return pd.DataFrame(records)
+
+
+def interval_coverage(
+    y_true: pd.Series, lower: pd.Series, upper: pd.Series
+) -> float:
+    return float(((y_true >= lower) & (y_true <= upper)).mean() * 100)
